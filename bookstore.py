@@ -6,7 +6,6 @@ cursor = db.cursor()  # Get a cursor object
 
 
 # Method to initialize book ID sequence in the database
-def initialize_book_id_sequence(cursor):
     def initialize_book_id_sequence(cursor):
         """
         Method to initialize the book ID sequence in the database.
@@ -18,6 +17,20 @@ def initialize_book_id_sequence(cursor):
 
 # Initialize the book ID sequence
 initialize_book_id_sequence(cursor)
+
+
+# Function to validate integer input
+def validate_integer_input(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            if value < 0:
+                print("Please enter a positive integer.")
+            else:
+                return value
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
+
 
 # Main loop for menu-driven interface
 while True:
@@ -33,19 +46,18 @@ exit - exit
 
     # Option to add a new book
     if menu == 'enter':
+        # Input book details with validation
         title = input("Enter the book title:  ")
-        author = input("Enter the author name: ")
+        while not title:
+            print("Book title cannot be empty.")
+            title = input("Enter the book title:  ")
 
-        # Input validation for quantity
-        while True:
-            try:
-                qty = int(input("Enter the quantity: "))
-                if qty < 0:
-                    print("Please enter a positive integer for quantity.")
-                else:
-                    break
-            except ValueError:
-                print("Invalid input. Please enter a positive integer for quantity.")
+        author = input("Enter the author name: ")
+        while not author:
+            print("Author name cannot be empty.")
+            author = input("Enter the author name: ")
+
+        qty = validate_integer_input("Enter the quantity: ")
 
         # Insert book details into the database
         cursor.execute("INSERT INTO book (title, author, qty) VALUES (?,?,?)",
@@ -82,14 +94,14 @@ exit - exit
                     print("Author updated successfully.")
                     break
                 elif question.lower() == 'quantity':
-                    new_quantity = input("Enter the new quantity: ")
+                    new_quantity = validate_integer_input("Enter the new quantity: ")
                     cursor.execute("UPDATE book SET qty = ? WHERE id = ?", (new_quantity, id_book))
                     print("Quantity updated successfully.")
                     break
                 elif question.lower() == 'all':
                     new_title = input("Enter the new title: ")
                     new_author = input("Enter the new author: ")
-                    new_quantity = input("Enter the new quantity: ")
+                    new_quantity = validate_integer_input("Enter the new quantity: ")
                     cursor.execute("UPDATE book SET title = ?, author = ?, qty = ? WHERE id = ?",
                                    (new_title, new_author, new_quantity, id_book))
                     print("Book updated successfully.")
@@ -101,7 +113,15 @@ exit - exit
     # Option to delete a book
     elif menu == 'delete':
         title = input("Please enter the title: ")
+        while not title:
+            print("Book title cannot be empty.")
+            title = input("Please enter the title: ")
+
         author = input("Please enter the author: ")
+        while not author:
+            print("Author name cannot be empty.")
+            author = input("Please enter the author: ")
+
         cursor.execute("DELETE FROM book WHERE title = ? AND author = ?", (title, author))
 
         # Print positive message if the book exists and if not display negative message
@@ -140,4 +160,4 @@ exit - exit
 
     # Handle invalid input
     else:
-        print("You have made entered an invalid input. Please try again")
+        print("You have entered an invalid input. Please try again")
