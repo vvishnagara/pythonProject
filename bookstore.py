@@ -6,13 +6,13 @@ cursor = db.cursor()  # Get a cursor object
 
 
 # Method to initialize book ID sequence in the database
-def initialize_book_id_sequence(cursor):
-    """
-    Method to initialize the book ID sequence in the database.
-    This ensures that book IDs start from a specific value.
-    """
-    cursor.execute("INSERT OR REPLACE INTO sqlite_sequence (name, seq) VALUES ('book', 3000)")
-    db.commit()
+    def initialize_book_id_sequence(cursor):
+        """
+        Method to initialize the book ID sequence in the database.
+        This ensures that book IDs start from a specific value.
+        """
+        cursor.execute("INSERT OR REPLACE INTO sqlite_sequence (name, seq) VALUES ('book', 3000)")
+        db.commit()
 
 
 # Initialize the book ID sequence
@@ -154,7 +154,7 @@ exit - exit
     # Option to exit the program
     elif menu == 'exit':
         print('Goodbye!!!')
-        db.close() # Close the database connection
+        db.close()  # Close the database connection
         print("Database Connection Closed.")
         exit()
 
